@@ -44,6 +44,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Web.DataVisualization" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -90,9 +91,13 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ClassLib\ClassLib.csproj">
-      <Project>{0ca9949a-657b-40db-8a0e-186478d6e285}</Project>
-      <Name>ClassLib</Name>
+    <ProjectReference Include="..\BusinessLayer\BusinessLayer.csproj">
+      <Project>{68fc175d-8d02-4364-92b4-4d707f6c7bc6}</Project>
+      <Name>BusinessLayer</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BusinessObject\BusinessObject.csproj">
+      <Project>{bf179d8b-21e2-485d-a5ce-d8b8306adde8}</Project>
+      <Name>BusinessObject</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>

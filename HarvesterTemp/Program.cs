@@ -1,8 +1,15 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net;
+using System.Runtime.Remoting.Channels;
 using System.Text;
 using System.Threading.Tasks;
+using System.Threading;
+using DataLayer;
+using System.Runtime.CompilerServices;
 
 namespace HarvesterTemp
 {
@@ -10,41 +17,21 @@ namespace HarvesterTemp
     {
         static void Main(string[] args)
         {
-        }
+            Program p = new Program();
 
-        private int[] GetPMValues()
-        {
-            //http://jsonviewer.stack.hu/
-            //59.202752, 10.953535
-            int[] values = new int[2];
-            values[0] = -999;
-
-            try
-            {
-                var httpWebRequest = (HttpWebRequest)WebRequest.Create("https://api.smartcitizen.me/v0/devices/14057");
-                httpWebRequest.ContentType = "application/json";
-                httpWebRequest.Method = "GET";
-                httpWebRequest.UserAgent = "bolle";
-                var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
-
-                using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+            for (; ;)
+            { 
+                if (DateTime.Now.Minute == 0)
                 {
-                    var result = streamReader.ReadToEnd();
-                    JObject jObj = JObject.Parse(result);
-
-                    JToken pm10 = jObj.SelectToken("data.sensors[7]");
-                    JToken pm25 = jObj.SelectToken("data.sensors[8]");
-                    int valuepm10 = pm10.Value<int>("value");
-                    int valuepm25 = pm25.Value<int>("value");
-                    values[0] = valuepm10;
-                    values[1] = valuepm25;
+                    p.GetStuff();
+                    var timeOfDay = DateTime.Now.TimeOfDay;
+                    var nextFullHour = TimeSpan.FromHours(Math.Ceiling(timeOfDay.TotalHours));
+                    var delta = (nextFullHour - timeOfDay).TotalMilliseconds;
+                    int Wait = 5 * 60 * 1000;
+                    Thread.Sleep(Convert.ToInt32(delta) - Wait);
                 }
+                Thread.Sleep(10000);
             }
-            catch (Exception ex)
-            {
-                return null;
-            }
-            return values;
         }
 
         public int GetStuff()
@@ -66,12 +53,14 @@ namespace HarvesterTemp
                 {
                     var result = streamReader.ReadToEnd();
                     JObject jObj = JObject.Parse(result);
-                    //JToken data = jObj.SelectToken("path");
-                    //int valuepm1 = data.Value<int>("keyname");//key name - getting key.value
-                    //int valuepm25 = data.Value<int>("pm25");
-                    //int radonValue = data.Value<int>("radonShortTermAvg");
-                    // inn i db
-
+                    JToken data = jObj.SelectToken("properties.timeseries[0].data.instant.details");
+                    float valuetemp = data.Value<float>("air_temperature");//key name - getting key.value
+                    float valueWindSpeed = data.Value<float>("wind_speed");
+                    float valueWindGust = data.Value<float>("wind_speed_of_gust");
+                    float valueWindDirection = data.Value<float>("wind_from_direction");
+                    //inn i db
+                    DBLayer DBL = new DBLayer();
+                    DBL.InsertMRTableValues(DateTime.Now, DateTime.Now.Hour, DateTime.Now.Day, DateTime.Now.Month, DateTime.Now.Year, valuetemp, valueWindSpeed, valueWindGust, valueWindDirection);
                 }
                 return 0;
             }
