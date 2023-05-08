@@ -28,7 +28,7 @@ namespace HarvesterTemp
                     var nextFullHour = TimeSpan.FromHours(Math.Ceiling(timeOfDay.TotalHours));
                     var delta = (nextFullHour - timeOfDay).TotalMilliseconds;
                     int Wait = 5 * 60 * 1000;
-                    Thread.Sleep(Convert.ToInt32(delta) - Wait);
+                    Thread.Sleep(Convert.ToInt32(delta) - Wait);//
                 }
                 Thread.Sleep(10000);
             }

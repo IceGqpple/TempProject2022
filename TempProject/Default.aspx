@@ -30,6 +30,12 @@
             padding: 10px;
             width: 1200px
         }
+        div.Warm{
+            color: darkred;
+        }
+        div.Cold{
+            color: darkblue;
+        }
     </style>
 </head>
 <body>
@@ -37,32 +43,19 @@
 
         <div class ="center">
 
-        <div class="dropdownmenu">
-  <a href="#home">Home</a>
-  <a href="#news">News</a>
-  <a href="#contact">Contact</a>
-  <a href="#about">About</a>
-  <a href="#support">Support</a>
-  <a href="#blog">Blog</a>
-  <a href="#tools">Tools</a>  
-  <a href="#base">Base</a>
-  <a href="#custom">Custom</a>
-  <a href="#more">More</a>
-  <a href="#logo">Logo</a>
-  <a href="#friends">Friends</a>
-  <a href="#partners">Partners</a>
-  <a href="#people">People</a>
-  <a href="#work">Work</a>
+        
 </div>
 
         <div>
 
 
-            <asp:Label ID="Label1" runat="server" Text="Label"></asp:Label>
-            <asp:Label ID="Label2" runat="server" Text="Label"></asp:Label>
-            <asp:Label ID="Label3" runat="server" Text="Label"></asp:Label>
-            <asp:Label ID="Label4" runat="server" Text="Label"></asp:Label>
-
+            <div class="Warm"><asp:Label ID="Label1Warm" runat="server" Text=""></asp:Label></div>
+            <div class="Cold"><asp:Label ID="Label1Cold" runat="server" Text=""></asp:Label></div>
+            <div><asp:Label ID="Label2" runat="server" Text="Label"></asp:Label></div>
+            <div><asp:Label ID="Label3" runat="server" Text="Label"></asp:Label></div>
+            <div><asp:Label ID="Label4" runat="server" Text="Label"></asp:Label></div>
+            <div><asp:Label ID="Label5" runat="server" Text="Label"></asp:Label></div>
+            <div><asp:GridView ID="GridView1" runat="server"></asp:GridView></div>
 
 
             <asp:Chart ID="Chart1" runat="server">
@@ -78,7 +71,27 @@
 
 
         </div>
-            </div>
     </form>
+    <script>
+/* When the user clicks on the button, 
+toggle between hiding and showing the dropdown content */
+function myFunction() {
+  document.getElementById("myDropdown").classList.toggle("show");
+}
+
+// Close the dropdown if the user clicks outside of it
+window.onclick = function(event) {
+  if (!event.target.matches('.dropbtn')) {
+    var dropdowns = document.getElementsByClassName("dropdown-content");
+    var i;
+    for (i = 0; i < dropdowns.length; i++) {
+      var openDropdown = dropdowns[i];
+      if (openDropdown.classList.contains('show')) {
+        openDropdown.classList.remove('show');
+      }
+    }
+  }
+}
+    </script>
 </body>
 </html>

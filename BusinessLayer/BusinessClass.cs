@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Net.WebRequestMethods;
 
 namespace BusinessLayer
 {
@@ -26,9 +27,13 @@ namespace BusinessLayer
         {
             return dbl.GetNowWindDirection();
         }
-        public List<WeatherData> GetWindSpeedAndGustByDayMonthYear(int day, int month, int year)
+        public List<WeatherData> GetNewest24Rows(int day, int month, int year)
         {
-            return dbl.GetWindSpeedAndGustByDayMonthYear(day, month, year);
+            return dbl.GetNewest24Rows(day, month, year);
+        }
+        public double GetTopTemp()
+        {
+            return dbl.GetTopTemp();
         }
     }
 }

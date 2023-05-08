@@ -8,7 +8,7 @@ namespace DataLayer
 {
     public class WeatherData
     {
-        public int Id { get;}
+        public int Id { get; set;}
         public DateTime DateAndTime { get; set; }
         public int Hour { get; set; }
         public int Day { get; set; }

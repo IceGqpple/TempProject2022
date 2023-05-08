@@ -78,6 +78,20 @@ namespace DataLayer
                 return num;
             }
         }
+        public double GetTopTemp()
+        {
+            var connectionString = ConfigurationManager.ConnectionStrings["ConnAir"].ConnectionString;
+
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+                SqlCommand cmd = new SqlCommand("SELECT DegreesC FROM WeatherData ORDER BY DegreesC DESC", conn);
+                cmd.CommandType = CommandType.Text;
+                double num = (double)cmd.ExecuteScalar();
+                return num;
+            }
+        }
         public double GetNowWind()
         {
             var connectionString = ConfigurationManager.ConnectionStrings["ConnAir"].ConnectionString;
@@ -120,29 +134,16 @@ namespace DataLayer
                 return num;
             }
         }
-        public List<WeatherData> GetWindSpeedAndGustByDayMonthYear(int day, int month, int year)
+        public List<WeatherData> GetNewest24Rows(int day, int month, int year)
         {
             var connectionString = ConfigurationManager.ConnectionStrings["ConnAir"].ConnectionString;
-            SqlParameter param;
             List<WeatherData> wds = new List<WeatherData>();
 
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 conn.Open();
-                SqlCommand cmd = new SqlCommand("SELECT TOP 24 WindSpeed, WindGust, Hour FROM WeatherData WHERE Day = @Day AND Month = @Month AND Year = @Year ORDER BY ID DESC", conn);
+                SqlCommand cmd = new SqlCommand("SELECT TOP 24 ID, DateAndTime, Hour, Day, Month, Year, DegreesC, WindSpeed, WindGust, WindDirection FROM WeatherData ORDER BY ID DESC", conn);
                 cmd.CommandType = CommandType.Text;
-
-                param = new SqlParameter("@Day", SqlDbType.Int);
-                param.Value = day;
-                cmd.Parameters.Add(param);
-
-                param = new SqlParameter("@Month", SqlDbType.Int);
-                param.Value = month;
-                cmd.Parameters.Add(param);
-
-                param = new SqlParameter("@Year", SqlDbType.Int);
-                param.Value = year;
-                cmd.Parameters.Add(param);
 
                 SqlDataReader reader = cmd.ExecuteReader();
 
@@ -152,7 +153,14 @@ namespace DataLayer
                     WeatherData data = new WeatherData();
                     data.WindSpeed = (double)reader["WindSpeed"];
                     data.WindGust = (double)reader["WindGust"];
+                    data.DegreesC = (double)reader["DegreesC"];
+                    data.Id = (int)reader["ID"];
+                    data.DateAndTime = (DateTime)reader["DateAndTime"];
                     data.Hour = (int)reader["Hour"];
+                    data.Day = (int)reader["Day"];
+                    data.Month = (int)reader["Month"];
+                    data.Year = (int)reader["Year"];
+                    data.WindDirection = (double)reader["WindDirection"];
                     wds.Add(data);
                 }
                 conn.Close();
